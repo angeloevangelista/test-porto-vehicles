@@ -1,0 +1,76 @@
+.title-container {
+  text-align: center;
+
+  margin: 2rem 1rem;
+}
+
+.title-container > strong {
+  display: block;
+  font-size: 2.5rem;
+}
+
+.vehicle-list {
+  margin: 0 auto;
+  max-width: 400px;
+
+  list-style-type: none;
+}
+
+.vehicle-item {
+  padding: 0.4rem;
+
+  text-align: center;
+
+  display: flex;
+  justify-content: space-around;
+
+  background: #f4f4f4;
+  border-radius: 0.4rem;
+
+  transition: 0.25s;
+}
+
+.vehicle-item.used {
+  filter: blur(2px);
+
+  /* filter: ; */
+}
+
+.vehicle-item + .vehicle-item {
+  margin-top: 0.4rem;
+}
+
+.vehicle-item:not([data-used="true"]):hover {
+  transform: scale(1.015);
+  box-shadow: 0 0 16px 1px rgba(0, 0, 0, 0.15);
+}
+
+.vehicle-item > button {
+  width: 2.4rem;
+  height: 2.4rem;
+
+  border: 0;
+  cursor: pointer;
+  background: transparent;
+
+  transition: 0.25s;
+}
+
+.vehicle-item > button:disabled {
+  cursor: unset;
+}
+
+.vehicle-item > button:not([disabled]):hover > svg {
+  color: rgb(78, 204, 126) !important;
+}
+
+.vehicle-item > div {
+  display: flex;
+  gap: 1rem;
+
+  margin: auto auto auto 2rem;
+}
+
+.vehicle-item > div > * {
+  margin: auto;
+}
