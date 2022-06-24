@@ -31,7 +31,7 @@ const UsedVehicles: React.FC = () => {
     } catch (error) {
       console.error(error);
 
-      toast.error("DEU RUIM RAPAZ!", {
+      toast.error("Deu ruim rapaz!", {
         position: "top-center",
         autoClose: 5000,
         hideProgressBar: false,
@@ -48,6 +48,16 @@ const UsedVehicles: React.FC = () => {
   const markVehicleAsUsed = useCallback(
     async (placa: string) => {
       navigator.clipboard.writeText(placa);
+
+      toast.success("Copiado!", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
 
       const foundVehicle = vehicles.find((v) => v.placa === placa);
 
@@ -120,3 +130,4 @@ const UsedVehicles: React.FC = () => {
 };
 
 export default UsedVehicles;
+
