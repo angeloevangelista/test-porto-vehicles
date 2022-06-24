@@ -4,6 +4,7 @@ import { BiSelectMultiple } from "react-icons/bi";
 import React, { useCallback, useEffect, useRef } from "react";
 
 import loaderSvg from "../../assets/svg/loader.svg";
+import { toast } from "react-toastify";
 
 interface Vehicle {
   placa: string;
@@ -14,15 +15,34 @@ interface Vehicle {
 const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 
 const UsedVehicles: React.FC = () => {
+  const [loading, setLoading] = React.useState<boolean>(false);
   const [vehicles, setVehicles] = React.useState<Vehicle[]>([]);
   const secretHiddenInputRef = useRef<HTMLInputElement | null>(null);
 
   const loadVehicles = useCallback(async () => {
-    const vehiclesResponse = await axios.get<Vehicle[]>(
-      `${apiBaseUrl}/vehicles`
-    );
+    setLoading(true);
 
-    setVehicles(vehiclesResponse.data.sort((a) => (a.usado ? 1 : -1)));
+    try {
+      const vehiclesResponse = await axios.get<Vehicle[]>(
+        `${apiBaseUrl}/vehicles`
+      );
+
+      setVehicles(vehiclesResponse.data.sort((a) => (a.usado ? 1 : -1)));
+    } catch (error) {
+      console.error(error);
+
+      toast.error("DEU RUIM RAPAZ!", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   const markVehicleAsUsed = useCallback(
@@ -60,7 +80,7 @@ const UsedVehicles: React.FC = () => {
 
       <input type="hidden" ref={secretHiddenInputRef} />
 
-      {!vehicles.length && (
+      {loading && (
         <div className="loader-container">
           <img
             src={loaderSvg}

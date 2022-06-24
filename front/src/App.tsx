@@ -1,7 +1,9 @@
 import React from "react";
 import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 
 import "./App.css";
+import 'react-toastify/dist/ReactToastify.css';
 
 import NewVehicles from "./pages/NewVehicles";
 import UsedVehicles from "./pages/UsedVehicles";
@@ -9,6 +11,18 @@ import UsedVehicles from "./pages/UsedVehicles";
 const App: React.FC = () => {
   return (
     <BrowserRouter>
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
+
       <div className="App">
         <div className="title-container">
           <strong>Placas da felicidade</strong>
