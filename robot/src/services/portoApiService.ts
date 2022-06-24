@@ -7,6 +7,7 @@ import {
   PortoVehicleAPIResponse,
   ValoresMercado,
 } from "../types";
+import { log } from "../util/log";
 
 class PortoApiService {
   private _api: AxiosInstance;
@@ -40,7 +41,10 @@ class PortoApiService {
     return tokenResponse.access_token;
   }
 
-  async getVehicle(plaque: string): Promise<ValoresMercado | null> {
+  async getVehicle(
+    plaque: string,
+    flagZeroKm: "S" | "N"
+  ): Promise<ValoresMercado | null> {
     let token: string;
 
     do {
@@ -50,8 +54,8 @@ class PortoApiService {
     } while (!token!);
 
     const queryParams = toQueryParams({
+      flagZeroKm,
       placa: plaque,
-      flagZeroKm: "N",
       montadora: 0,
     });
 
@@ -60,6 +64,8 @@ class PortoApiService {
     let response: AxiosResponse<PortoVehicleAPIResponse, any> | null;
 
     try {
+      // log(`🔎 ${plaque}`);
+      
       response = await this._api.get<PortoVehicleAPIResponse>(url, {
         headers: { Authorization: `Bearer ${token}` },
       });

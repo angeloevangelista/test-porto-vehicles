@@ -4,11 +4,13 @@ import path from "path";
 import { AxiosError } from "axios";
 
 import { log } from "./util/log";
-import { testNewPlaque } from "./functions/testNewPlaque";
-import { updateStorageFiles } from "./functions/updateStorageFiles";
 import { checkIfExistsAndCreate } from "./util/checkIfExistsAndCreate";
 import { recoverAlreadySavedData } from "./functions/recoverAlreadySavedData";
 import { GlobalVariablesService } from "./services/globalVariablesService";
+import { updateStorageFilesTimeoutFunction } from "./functions/updateStorageFilesTimeoutFunction";
+import { testNewPlaque } from "./functions/testNewPlaque";
+import { StorageFileType, ValidVehicle, ValoresMercado } from "./types";
+import { mapping } from "./mapping";
 
 const serializedVehiclesPath = path.resolve(
   __dirname,
@@ -20,29 +22,25 @@ const serializedVehiclesPath = path.resolve(
 async function doStuff() {
   checkIfExistsAndCreate(serializedVehiclesPath, []);
 
-  await recoverAlreadySavedData(serializedVehiclesPath);
+  await recoverAlreadySavedData(
+    serializedVehiclesPath,
+    GlobalVariablesService.validVehicleNonZeroKmCollection
+  );
 
-  updateStorageFilesTimeoutFunction();
+  updateStorageFilesTimeoutFunction(
+    serializedVehiclesPath,
+    StorageFileType.VehiclesWithPlaqueZeroKm
+  );
 
   setInterval(() => {
     try {
-      testNewPlaque();
+      testNewPlaque<ValidVehicle>(
+        mapping.collections[StorageFileType.VehiclesWithPlaqueZeroKm],
+        "S",
+        mapping.convertFunctions[StorageFileType.VehiclesWithPlaqueZeroKm]
+      );
     } catch (error) {}
   }, GlobalVariablesService.testNewPlaqueTimeoutTime);
-}
-
-async function updateStorageFilesTimeoutFunction(): Promise<void> {
-  if (GlobalVariablesService.updateStorageFilesTimeout) {
-    clearTimeout(GlobalVariablesService.updateStorageFilesTimeout);
-    GlobalVariablesService.updateStorageFilesTimeout = null;
-  }
-
-  await updateStorageFiles(serializedVehiclesPath);
-
-  GlobalVariablesService.updateStorageFilesTimeout = setTimeout(
-    updateStorageFilesTimeoutFunction,
-    GlobalVariablesService.updateStorageFilesTimeoutTime
-  );
 }
 
 doStuff().catch((error: any) => {

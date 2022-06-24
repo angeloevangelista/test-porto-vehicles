@@ -1,3 +1,8 @@
+export enum StorageFileType {
+  VehiclesWithPlaqueZeroKm,
+  VehiclesWithPlaqueNonZeroKm,
+}
+
 export interface Vehicle {
   Codigo: number;
   Descricao: string;

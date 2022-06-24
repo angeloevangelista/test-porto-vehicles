@@ -1,11 +1,15 @@
 import { geradorPlacaVeiculo } from "gerador-placa-veiculo";
 
 import { log } from "../util/log";
-import { MarcaVeiculoEnum } from "../types";
+import { MarcaVeiculoEnum, ValidVehicle, ValoresMercado } from "../types";
 import { PortoApiService } from "../services/portoApiService";
 import { GlobalVariablesService } from "../services/globalVariablesService";
 
-async function testNewPlaque() {
+async function testNewPlaque<T>(
+  vehicleCollection: T[],
+  flagZeroKm: "S" | "N",
+  convertToSaveFormat: (vehicle: ValoresMercado, plaque: string) => T
+) {
   const portoApiService = PortoApiService.getInstance();
 
   let plaque: string;
@@ -14,7 +18,7 @@ async function testNewPlaque() {
     plaque = geradorPlacaVeiculo();
   } while (GlobalVariablesService.testedPlaques.includes(plaque));
 
-  const vehicle = await portoApiService.getVehicle(plaque);
+  const vehicle = await portoApiService.getVehicle(plaque, flagZeroKm);
 
   GlobalVariablesService.testedPlaques.push(plaque);
 
@@ -36,10 +40,7 @@ async function testNewPlaque() {
     return;
   }
 
-  GlobalVariablesService.validVehicles.push({
-    placa: plaque,
-    modelo: vehicle.versaoVeiculo.modelo.nomeModelo,
-  });
+  vehicleCollection.push(convertToSaveFormat(vehicle, plaque));
 
   log(`✅ ${plaque}`);
 }

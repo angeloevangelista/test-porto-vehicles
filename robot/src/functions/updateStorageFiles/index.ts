@@ -1,0 +1,1 @@
+export { updateStorageFilesForVehiclesWithPlaqueNonZeroKm } from "./updateStorageFilesForVehiclesWithPlaqueNonZeroKm";

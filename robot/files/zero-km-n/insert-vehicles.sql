@@ -4952,4 +4952,7 @@ INSERT INTO vehicles (placa, modelo, usado) VALUES('GHD5H38', 'NOVA SAVEIRO', fa
 ('FLK5G17', 'NOVO JETTA', false),
 ('CFM5H20', 'GOL', false),
 ('FXN3F45', 'UP!', false),
-('QBH4C62', 'NOVO GOL', false)
+('QBH4C62', 'NOVO GOL', false),
+('QFW0C08', 'NOVO FOX GIII', false),
+('HZC5J00', 'CAMINHAO', false),
+('BOG5A31', 'GOL', false)

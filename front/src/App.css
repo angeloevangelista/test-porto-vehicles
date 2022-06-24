@@ -1,3 +1,17 @@
+.App {
+  padding-bottom: 6rem;
+}
+
+.loader-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loader-container > img {
+  width: 4rem;
+}
+
 .title-container {
   text-align: center;
 
@@ -9,14 +23,43 @@
   font-size: 2.5rem;
 }
 
+.page-header {
+  text-align: center;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 0.4rem;
+
+  margin: 2rem;
+}
+
+.page-header > strong {
+  font-size: 1.4rem;
+  margin-left: 1rem;
+
+  display: block;
+}
+
 .vehicle-list {
+  padding: 0.4rem;
+
   margin: 0 auto;
   max-width: 400px;
 
   list-style-type: none;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 0.4rem;
 }
 
 .vehicle-item {
+  flex: 1;
+
   padding: 0.4rem;
 
   text-align: center;
@@ -34,10 +77,6 @@
   filter: blur(2px);
 
   /* filter: ; */
-}
-
-.vehicle-item + .vehicle-item {
-  margin-top: 0.4rem;
 }
 
 .vehicle-item:not([data-used="true"]):hover {
@@ -73,4 +112,79 @@
 
 .vehicle-item > div > * {
   margin: auto;
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+
+  padding: 0.4rem;
+
+  width: 100%;
+  height: 4rem;
+
+  background-color: #f4f4f4;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  gap: 1rem;
+
+  box-shadow: 0 0 16px 1px rgba(0, 0, 0, 0.15);
+}
+
+.footer > .page-button {
+  padding: 0.4rem;
+
+  border: 0;
+  cursor: pointer;
+  border-radius: 0.4rem;
+
+  transition: 0.25s;
+
+  background-color: #e6e6e6;
+
+  text-transform: uppercase;
+  font-weight: 500;
+
+  text-decoration: none;
+  color: currentColor;
+}
+
+.footer > .page-button:hover {
+  transform: scale(1.25);
+}
+
+.vehicle-board {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+
+  padding: 0.8rem;
+}
+
+.vehicle-board > .vehicle-board-item {
+  padding: 0.4rem;
+
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+
+  background: #f4f4f4;
+  border-radius: 0.4rem;
+
+  transition: 0.25s;
+}
+
+.vehicle-board > .vehicle-board-item > div + div {
+  padding-top: 0.4rem;
+  border-top: solid 1px #e6e6e6;
+}
+
+.vehicle-board > .vehicle-board-item > div {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  white-space: break-spaces;
 }
