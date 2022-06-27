@@ -85,7 +85,7 @@ const NewVehicles: React.FC = () => {
       <header className="page-header">
         <AiOutlineCar size={24} color="#7e7e7e" />
 
-        <strong>Placas veículos usados</strong>
+        <strong>Placas veículos novos</strong>
       </header>
 
       <input type="hidden" ref={secretHiddenInputRef} />
