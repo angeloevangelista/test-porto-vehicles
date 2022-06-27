@@ -57,6 +57,7 @@ export interface MarcaVeiculo {
 
 export enum MarcaVeiculoEnum {
   Volkswagen = 1,
+  Audi = 63,
   Renault = 75,
 }
 

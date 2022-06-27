@@ -1,74 +1,130 @@
+import axios from "axios";
 import { AiOutlineCar } from "react-icons/ai";
-import React, { useMemo } from "react";
+import { BiSelectMultiple } from "react-icons/bi";
+import React, { useCallback, useEffect, useRef } from "react";
 
-import vehiclesJson from "../../assets/data/zero-km-vehicles.json";
+import loaderSvg from "../../assets/svg/loader.svg";
+import { toast } from "react-toastify";
 
 interface Vehicle {
-  codigoTipoTabela: number;
-  codigoVeiculoTabela: number;
-  digitoVeiculoTabela: number;
   placa: string;
-  anoModelo: number;
-  flagZeroKm: string;
-  anoFabricacao: number;
-  chassi: string;
-  nomeVersao: string;
   modelo: string;
+  usado: boolean;
 }
 
+const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
+
 const NewVehicles: React.FC = () => {
-  const vehicles = useMemo<Vehicle[]>(() => vehiclesJson, []);
+  const [loading, setLoading] = React.useState<boolean>(false);
+  const [vehicles, setVehicles] = React.useState<Vehicle[]>([]);
+  const secretHiddenInputRef = useRef<HTMLInputElement | null>(null);
+
+  const loadVehicles = useCallback(async () => {
+    setLoading(true);
+
+    try {
+      const vehiclesResponse = await axios.get<Vehicle[]>(
+        `${apiBaseUrl}/vehicles?zero_km=true`
+      );
+
+      setVehicles(vehiclesResponse.data.sort((a) => (a.usado ? 1 : -1)));
+    } catch (error) {
+      console.error(error);
+
+      toast.error("Deu ruim rapaz!", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const markVehicleAsUsed = useCallback(
+    async (placa: string) => {
+      navigator.clipboard.writeText(placa);
+
+      toast.success("Copiado!", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+
+      const foundVehicle = vehicles.find((v) => v.placa === placa);
+
+      foundVehicle!.usado = true;
+
+      const filteredVehicles = vehicles
+        .map((p) => (p.placa === foundVehicle?.placa ? foundVehicle : p))
+        .sort((a) => (a.usado ? 1 : -1));
+
+      setVehicles(filteredVehicles);
+
+      await axios.delete<Vehicle[]>(`${apiBaseUrl}/vehicles/${placa}`);
+
+      loadVehicles();
+    },
+    [loadVehicles, vehicles]
+  );
+
+  useEffect(() => {
+    loadVehicles();
+  }, [loadVehicles]);
 
   return (
     <>
       <header className="page-header">
         <AiOutlineCar size={24} color="#7e7e7e" />
 
-        <strong>Veículos Novos</strong>
+        <strong>Placas veículos usados</strong>
       </header>
 
-      <div className="vehicle-board">
-        {vehicles.map((vehicle) => (
-          <div key={vehicle.chassi} className="vehicle-board-item">
-            <div>
-              <strong>Placa: </strong>
-              <span>{vehicle.placa}</span>
-            </div>
-            <div>
-              <strong>Modelo: </strong>
-              <span>{vehicle.modelo}</span>
-            </div>
-            <div>
-              <strong>Cód. tipo tabela: </strong>
-              <span>{vehicle.codigoTipoTabela}</span>
-            </div>
-            <div>
-              <strong>Cód. veículo tabela: </strong>
-              <span>{vehicle.codigoVeiculoTabela}</span>
-            </div>
-            <div>
-              <strong>Dígito veículo tabela: </strong>
-              <span>{vehicle.digitoVeiculoTabela}</span>
-            </div>
-            <div>
-              <strong>Ano modelo: </strong>
-              <span>{vehicle.anoModelo}</span>
-            </div>
-            <div>
-              <strong>Ano fabricacao: </strong>
-              <span>{vehicle.anoFabricacao}</span>
-            </div>
-            <div>
-              <strong>Chassi: </strong>
-              <span>{vehicle.chassi}</span>
-            </div>
-            <div>
-              <strong>Nome versão: </strong>
-              <span>{vehicle.nomeVersao}</span>
-            </div>
-          </div>
-        ))}
-      </div>
+      <input type="hidden" ref={secretHiddenInputRef} />
+
+      {loading && (
+        <div className="loader-container">
+          <img
+            src={loaderSvg}
+            alt="Loader bonitão que o Angelo teve que copiar inteiro pro código porque é um SVG boladão"
+          />
+        </div>
+      )}
+
+      {!!vehicles.length && (
+        <ul className="vehicle-list">
+          {vehicles.map((vehicle) => (
+            <li
+              data-used={vehicle.usado}
+              key={vehicle.placa}
+              className={`vehicle-item ${vehicle.usado ? "used" : ""}`}
+            >
+              <div>
+                <strong>{vehicle.placa}</strong>
+
+                <span>-</span>
+
+                <span>{vehicle.modelo}</span>
+              </div>
+
+              <button
+                disabled={vehicle.usado}
+                onClick={() => markVehicleAsUsed(vehicle.placa)}
+              >
+                <BiSelectMultiple size={24} color="#7e7e7e" />
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
     </>
   );
 };

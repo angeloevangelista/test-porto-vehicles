@@ -12,6 +12,7 @@ interface Vehicle {
   placa: string;
   modelo: string;
   usado: boolean;
+  zero_km: boolean;
 }
 
 app.use(cors());
@@ -26,10 +27,15 @@ const poolConfig = {
 };
 
 app.get("/api/vehicles", async (request, response) => {
+  const zeroKm = request.query.zero_km == 'true';
+
   const pool = new Pool(poolConfig);
   const poolClient = await pool.connect();
 
-  const results = await poolClient.query<Vehicle>("SELECT * FROM vehicles");
+  const results = await poolClient.query<Vehicle>(
+    "SELECT * FROM vehicles where zero_km = $1",
+    [zeroKm]
+  );
 
   poolClient.release();
   await pool.end();

@@ -56,7 +56,6 @@ class PortoApiService {
     const queryParams = toQueryParams({
       flagZeroKm,
       placa: plaque,
-      montadora: 0,
     });
 
     const url = `automovel/parceiro-multimercado/v1-1/veiculos${queryParams}`;
@@ -65,7 +64,7 @@ class PortoApiService {
 
     try {
       // log(`🔎 ${plaque}`);
-      
+
       response = await this._api.get<PortoVehicleAPIResponse>(url, {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -75,6 +74,11 @@ class PortoApiService {
 
     if (response?.status === 200) {
       return response.data.valoresMercado.at(0)!;
+    }
+
+    if (response?.status === 429) {
+      log(`🕒 Rate Limit exceeded`);
+      return await this.getVehicle(plaque, flagZeroKm);
     }
 
     return null;

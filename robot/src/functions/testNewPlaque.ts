@@ -14,6 +14,18 @@ async function testNewPlaque<T>(
 
   let plaque: string;
 
+  let molicarLength = 0;
+
+  switch (GlobalVariablesService.marcaVeiculo) {
+    case MarcaVeiculoEnum.Audi:
+      molicarLength = 6;
+      break;
+
+    case MarcaVeiculoEnum.Volkswagen:
+      molicarLength = 7;
+      break;
+  }
+
   do {
     plaque = geradorPlacaVeiculo();
   } while (GlobalVariablesService.testedPlaques.includes(plaque));
@@ -24,15 +36,16 @@ async function testNewPlaque<T>(
 
   const thereIsNoVehicle = !vehicle;
 
-  const vehicleIsNotVolkswagen =
-    vehicle?.versaoVeiculo.modelo.marca.codigo !== MarcaVeiculoEnum.Volkswagen;
+  const vehicleIsNotFromSelectedBrand =
+    vehicle?.versaoVeiculo.modelo.marca.codigo !==
+    GlobalVariablesService.marcaVeiculo;
 
   const thereIsNoMolicar = !vehicle?.versaoVeiculo.tabelaReferencia.some(
-    (p) => p.codigoVeiculoTabela.toString().length === 7
+    (p) => p.codigoVeiculoTabela.toString().length === molicarLength
   );
 
   const invalid =
-    thereIsNoVehicle || vehicleIsNotVolkswagen || thereIsNoMolicar;
+    thereIsNoVehicle || vehicleIsNotFromSelectedBrand || thereIsNoMolicar;
 
   if (invalid) {
     log(`❌ ${plaque}`);

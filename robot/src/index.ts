@@ -9,7 +9,7 @@ import { recoverAlreadySavedData } from "./functions/recoverAlreadySavedData";
 import { GlobalVariablesService } from "./services/globalVariablesService";
 import { updateStorageFilesTimeoutFunction } from "./functions/updateStorageFilesTimeoutFunction";
 import { testNewPlaque } from "./functions/testNewPlaque";
-import { StorageFileType, ValidVehicle, ValoresMercado } from "./types";
+import { MarcaVeiculoEnum, StorageFileType, ValidVehicle } from "./types";
 import { mapping } from "./mapping";
 
 const serializedVehiclesPath = path.resolve(
@@ -20,6 +20,8 @@ const serializedVehiclesPath = path.resolve(
 );
 
 async function doStuff() {
+  GlobalVariablesService.marcaVeiculo = MarcaVeiculoEnum.Audi;
+
   checkIfExistsAndCreate(serializedVehiclesPath, []);
 
   await recoverAlreadySavedData(
