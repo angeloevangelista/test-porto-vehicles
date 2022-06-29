@@ -1,6 +1,8 @@
 export enum StorageFileType {
   VehiclesWithPlaqueZeroKm,
   VehiclesWithPlaqueNonZeroKm,
+  LoadedVehiclesModels,
+  ValidatedVehiclesModels,
 }
 
 export interface Vehicle {
@@ -74,4 +76,12 @@ export interface TabelaReferencia {
 export interface ValidVehicle {
   placa: string;
   modelo: string;
+}
+
+export interface VehicleModel {
+  molicar: string;
+  digitoMolicar: string;
+  montadora: string;
+  descricao: string;
+  tested: boolean;
 }

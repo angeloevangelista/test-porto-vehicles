@@ -1,4 +1,4 @@
-import { MarcaVeiculoEnum, ValidVehicle } from "../types";
+import { MarcaVeiculoEnum, ValidVehicle, VehicleModel } from "../types";
 
 class GlobalVariablesService {
   public static testedPlaques: string[] = [];
@@ -9,6 +9,11 @@ class GlobalVariablesService {
 
   public static validVehicleNonZeroKmCollection: ValidVehicle[] = [];
   public static validVehicleZeroKmCollection: any[] = [];
+  public static loadedVehicleModelsZeroKmCollection: VehicleModel[] = [];
+  public static validVehicleModelsZeroKmCollection: any[] = [];
+
+  public static modelYearsToTest: number[] = [2021, 2022];
+  public static lastIndex: number = 0;
 
   private constructor() {}
 }

@@ -83,6 +83,57 @@ class PortoApiService {
 
     return null;
   }
+
+  async getVehicleFromMolicar(
+    codigoTabelaReferencia: string,
+    digitoTabelaReferencia: string,
+    anoModelo: number,
+    flagZeroKm: "S" | "N"
+  ): Promise<ValoresMercado | null> {
+    let token: string;
+
+    do {
+      try {
+        token = await this.getTokenPorto();
+      } catch (error) {}
+    } while (!token!);
+
+    const queryParams = toQueryParams({
+      tipoTabelaReferencia: "3",
+      flagZeroKm,
+      codigoTabelaReferencia,
+      digitoTabelaReferencia,
+      anoModelo,
+    });
+
+    const url = `automovel/parceiro-multimercado/v1-1/veiculos${queryParams}`;
+
+    let response: AxiosResponse<PortoVehicleAPIResponse, any> | null;
+
+    try {
+      response = await this._api.get<PortoVehicleAPIResponse>(url, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+    } catch (error: any) {
+      response = error.response;
+    }
+
+    if (response?.status === 200) {
+      return response.data.valoresMercado.at(0)!;
+    }
+
+    if (response?.status === 429) {
+      log(`🕒 Rate Limit exceeded`);
+      return await this.getVehicleFromMolicar(
+        codigoTabelaReferencia,
+        digitoTabelaReferencia,
+        anoModelo,
+        flagZeroKm
+      );
+    }
+
+    return null;
+  }
 }
 
 export { PortoApiService };

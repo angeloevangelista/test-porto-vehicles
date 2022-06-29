@@ -27,7 +27,7 @@ const poolConfig = {
 };
 
 app.get("/api/vehicles", async (request, response) => {
-  const zeroKm = request.query.zero_km == 'true';
+  const zeroKm = request.query.zero_km == "true";
 
   const pool = new Pool(poolConfig);
   const poolClient = await pool.connect();
@@ -44,7 +44,7 @@ app.get("/api/vehicles", async (request, response) => {
 });
 
 app.delete("/api/vehicles/:placa", async (request, response) => {
-  const placa = request.params.placa.toUpperCase();
+  const placa = request.params.placa.toUpperCase() as string;
 
   const pool = new Pool(poolConfig);
   const poolClient = await pool.connect();
@@ -62,6 +62,47 @@ app.delete("/api/vehicles/:placa", async (request, response) => {
   const { rowCount } = await pool.query(
     "UPDATE vehicles SET usado = true WHERE placa = $1",
     [placa]
+  );
+
+  poolClient.release();
+  await pool.end();
+
+  return response.status(rowCount === 0 ? 400 : 204).send();
+});
+
+app.get("/api/models", async (request, response) => {
+  const pool = new Pool(poolConfig);
+  const poolClient = await pool.connect();
+
+  const results = await poolClient.query<Vehicle>(
+    "SELECT * FROM vehicle_models"
+  );
+
+  poolClient.release();
+  await pool.end();
+
+  return response.json(results.rows);
+});
+
+app.delete("/api/models/:id", async (request, response) => {
+  const modelId = request.params.id;
+
+  const pool = new Pool(poolConfig);
+  const poolClient = await pool.connect();
+
+  const foundModels = await poolClient.query<Vehicle>(
+    "SELECT * FROM vehicle_models where id = $1",
+    [modelId]
+  );
+
+  if (foundModels.rows.length === 0)
+    return response.status(404).json({
+      error: "Tem esse modelo aqui não, bro",
+    });
+
+  const { rowCount } = await pool.query(
+    "UPDATE vehicle_models SET usado = true where id = $1",
+    [modelId]
   );
 
   poolClient.release();

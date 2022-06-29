@@ -3,11 +3,12 @@ import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 
 import "./App.css";
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
 
-import NewVehiclesGrid from "./pages/NewVehiclesGrid";
+import NewModels from "./pages/NewModels";
 import UsedVehicles from "./pages/UsedVehicles";
 import NewVehicles from "./pages/NewVehicles";
+import NewVehiclesGrid from "./pages/NewVehiclesGrid";
 
 const App: React.FC = () => {
   return (
@@ -33,6 +34,7 @@ const App: React.FC = () => {
         <Routes>
           <Route path="/" element={<UsedVehicles />} />
           <Route path="/zero-km" element={<NewVehicles />} />
+          <Route path="/zero-km-models" element={<NewModels />} />
           <Route path="/zero-km-grid" element={<NewVehiclesGrid />} />
         </Routes>
 
@@ -45,8 +47,8 @@ const App: React.FC = () => {
             0 km
           </Link>
 
-          <Link to={"/zero-km-grid"} className="page-button">
-            0 km Grid
+          <Link to={"/zero-km-models"} className="page-button">
+            0 km Models
           </Link>
         </footer>
       </div>

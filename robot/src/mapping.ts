@@ -28,6 +28,12 @@ const convertFunctions: {
       modelo: vehicle.versaoVeiculo.modelo.nomeModelo,
     };
   },
+  [StorageFileType.LoadedVehiclesModels]: (vehicle, plaque) => ({
+    message: "convertFunction not implemented",
+  }),
+  [StorageFileType.ValidatedVehiclesModels]: (vehicle, plaque) => ({
+    message: "convertFunction not implemented",
+  }),
 };
 
 const collections: {
@@ -38,6 +44,12 @@ const collections: {
 
   [StorageFileType.VehiclesWithPlaqueZeroKm]:
     GlobalVariablesService.validVehicleZeroKmCollection,
+
+  [StorageFileType.LoadedVehiclesModels]:
+    GlobalVariablesService.loadedVehicleModelsZeroKmCollection,
+
+  [StorageFileType.ValidatedVehiclesModels]:
+    GlobalVariablesService.validVehicleModelsZeroKmCollection,
 };
 
 const mapping = {

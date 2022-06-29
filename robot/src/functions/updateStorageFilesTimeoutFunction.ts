@@ -3,6 +3,8 @@ import { GlobalVariablesService } from "../services/globalVariablesService";
 import { updateStorageFilesForVehiclesWithPlaqueNonZeroKm } from "./updateStorageFiles";
 import { exit } from "process";
 import { updateStorageFilesForVehiclesWithPlaqueZeroKm } from "./updateStorageFiles/updateStorageFilesForVehiclesWithPlaqueZeroKm";
+import { updateStorageFilesForLoadedVehiclesModels } from "./updateStorageFiles/updateStorageFilesForLoadedVehiclesModels";
+import { updateStorageFilesForValidatedVehiclesModels } from "./updateStorageFiles/updateStorageFilesForValidatedVehiclesModels";
 
 async function updateStorageFilesTimeoutFunction(
   serializedVehiclesPath: string,
@@ -22,6 +24,16 @@ async function updateStorageFilesTimeoutFunction(
 
     case StorageFileType.VehiclesWithPlaqueZeroKm:
       await updateStorageFilesForVehiclesWithPlaqueZeroKm(
+        serializedVehiclesPath
+      );
+      break;
+
+    case StorageFileType.LoadedVehiclesModels:
+      await updateStorageFilesForLoadedVehiclesModels(serializedVehiclesPath);
+      break;
+
+    case StorageFileType.ValidatedVehiclesModels:
+      await updateStorageFilesForValidatedVehiclesModels(
         serializedVehiclesPath
       );
       break;

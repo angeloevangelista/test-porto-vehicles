@@ -43,7 +43,8 @@
   display: block;
 }
 
-.vehicle-list {
+.vehicle-list,
+.model-list {
   padding: 0.4rem;
 
   margin: 0 auto;
@@ -57,7 +58,12 @@
   gap: 0.4rem;
 }
 
-.vehicle-item {
+.model-list {
+  gap: 0.6rem;
+}
+
+.vehicle-item,
+.model-item {
   flex: 1;
 
   padding: 0.4rem;
@@ -73,18 +79,25 @@
   transition: 0.25s;
 }
 
-.vehicle-item.used {
+.model-item {
+  text-align: left;
+}
+
+.vehicle-item.used,
+.model-item.used {
   filter: blur(2px);
 
   /* filter: ; */
 }
 
-.vehicle-item:not([data-used="true"]):hover {
+.vehicle-item:not([data-used="true"]):hover,
+.model-item:not([data-used="true"]):hover {
   transform: scale(1.015);
   box-shadow: 0 0 16px 1px rgba(0, 0, 0, 0.15);
 }
 
-.vehicle-item > button {
+.vehicle-item > button,
+.model-item > button {
   width: 2.4rem;
   height: 2.4rem;
 
@@ -95,19 +108,52 @@
   transition: 0.25s;
 }
 
-.vehicle-item > button:disabled {
+.vehicle-item > button:disabled,
+.model-item > button:disabled {
   cursor: unset;
 }
 
-.vehicle-item > button:not([disabled]):hover > svg {
+.vehicle-item > button:not([disabled]):hover > svg,
+.model-item > button:not([disabled]):hover > svg {
   color: rgb(78, 204, 126) !important;
 }
 
-.vehicle-item > div {
+.vehicle-item > div,
+.model-item > div {
   display: flex;
   gap: 1rem;
 
   margin: auto auto auto 2rem;
+}
+
+.model-item > div {
+  gap: 0.4rem;
+}
+
+.model-item > div {
+  flex-direction: column;
+}
+
+.anos-modelo {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.anos-container {
+  display: flex;
+  gap: 0.2rem;
+}
+
+.anos-container > span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0 0.2rem;
+  font-size: 0.8rem;
+
+  background-color: #d7d7d7;
+  border-radius: 0.4rem;
 }
 
 .vehicle-item > div > * {
