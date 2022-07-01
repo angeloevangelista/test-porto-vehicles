@@ -1,6 +1,6 @@
 import axios from "axios";
+import { FiCopy } from "react-icons/fi";
 import { AiOutlineCar } from "react-icons/ai";
-import { BiSelectMultiple } from "react-icons/bi";
 import React, { useCallback, useEffect, useRef } from "react";
 
 import loaderSvg from "../../assets/svg/loader.svg";
@@ -47,25 +47,23 @@ const NewModels: React.FC = () => {
     }
   }, []);
 
-  const markVehicleAsUsed = useCallback(
+  const copyModelToClipboard = useCallback(
     async (id: string) => {
       const foundModel = models.find((v) => v.id === id);
 
       navigator.clipboard.writeText(foundModel!.descricao);
 
-      foundModel!.usado = true;
-
-      const filteredModels = models
-        .map((p) => (p.id === foundModel?.id ? foundModel : p))
-        .sort((a) => (a.usado ? 1 : -1));
-
-      setModels(filteredModels);
-
-      await axios.delete<Model[]>(`${apiBaseUrl}/models/${id}`);
-
-      loadModels();
+      toast.success("Copiado!", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     },
-    [loadModels, models]
+    [models]
   );
 
   useEffect(() => {
@@ -115,9 +113,9 @@ const NewModels: React.FC = () => {
 
               <button
                 disabled={model.usado}
-                onClick={() => markVehicleAsUsed(model.id)}
+                onClick={() => copyModelToClipboard(model.id)}
               >
-                <BiSelectMultiple size={24} color="#7e7e7e" />
+                <FiCopy size={24} color="#7e7e7e" />
               </button>
             </li>
           ))}
